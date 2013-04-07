@@ -18,3 +18,4 @@ FileUtils.move(filename, '/usr/bin/jsget',{:force => true})
 puts "installing '/usr/bin/jsget'"
 FileUtils.chmod(0755, '/usr/bin/jsget', {:verbose => true})
 puts "install successed."
+puts
