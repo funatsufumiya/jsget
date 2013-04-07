@@ -11,7 +11,7 @@ open(url) do |source|
     o.print source.read
   end
 end
-
+puts
 puts "download 'https://raw.github.com/atmarksharp/jsget/master/jsget'"
 
 FileUtils.move(filename, '/usr/bin/jsget',{:force => true})
