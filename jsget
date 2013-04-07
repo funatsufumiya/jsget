@@ -59,7 +59,7 @@ end
  
 def selfupdate()
   console "updating jsget..."
-  system 'sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/atmarksharp/jsget/master/jsget_install.rb)"'
+  system 'sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/atmarksharp/jsget/master/jsget-install.rb)"'
   update()
   exit
 end
