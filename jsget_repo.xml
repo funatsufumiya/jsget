@@ -1,8 +1,9 @@
 <repositories>
   <repository>
-    <url></url>
+    <name>jquery</name>
+    <url>http://code.jquery.com/</url>
     <versions>
-      <version value="" path="" filename="" />
+      <version value="1.9.1" path="" filename="jquery-1.9.1.min.js" />
     </versions>
   </repository>
 </repositories>
