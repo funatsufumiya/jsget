@@ -51,7 +51,7 @@ end
 def update()
   download "https://raw.github.com/atmarksharp/jsget/master/jsget_repo.xml"
  
-  FileUtils.move("jsget_repo.xml", "#{ENV["HOME"] + "/.jsget/jsget_repo.xml", {:force=>true})
+  FileUtils.move("jsget_repo.xml", "#{ENV["HOME"]}/.jsget/jsget_repo.xml", {:force=>true})
   
   console "updated :)"
   puts
