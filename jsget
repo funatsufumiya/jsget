@@ -38,6 +38,8 @@ def download(url, filename=nil)
   open(filename, "w") {|f| temp.each {|line| f.puts(line) }}
  
   temp.close
+
+  filename
 end
  
 def console(s)
@@ -49,10 +51,10 @@ def usage()
 end
  
 def update()
-  download "https://raw.github.com/atmarksharp/jsget/master/jsget_repo.xml"
+  filename = download "https://raw.github.com/atmarksharp/jsget/master/jsget_repo.xml"
  
-  FileUtils.move("#{FileUtils.pwd}/jsget_repo.xml", "#{ENV["HOME"]}/.jsget/jsget_repo.xml", {:force=>true})
-  console "save jsget_repo.xml to '#{ENV["HOME"]}/.jsget/jsget_repo.xml'"
+  console "saving jsget_repo.xml to '#{ENV["HOME"]}/.jsget/jsget_repo.xml'"
+  FileUtils.move(filename, "#{ENV["HOME"]}/.jsget/jsget_repo.xml", {:force=>true})
   console "updated :)"
   puts
 end
