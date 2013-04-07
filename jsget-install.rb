@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'fileutils'
 
-url = 'http://~~~'
+url = 'https://raw.github.com/atmarksharp/jsget/master/jsget'
 usage unless url
 
 filename = url.split(/\//).last
