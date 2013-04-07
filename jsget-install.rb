@@ -24,6 +24,7 @@ FileUtils.move(filename, '/usr/bin/jsget',{:force => true})
 console("installing '/usr/bin/jsget'")
 FileUtils.chmod(0755, '/usr/bin/jsget', {:verbose => true})
 FileUtils.mkdir_p("#{ENV["HOME"]}/.jsget/")
+FileUtils.chmod(0775, "#{ENV["HOME"]}/.jsget/", {:verbose => true})
 console("createing folder '~/.jsget'")
 console("install successed :)")
 puts
