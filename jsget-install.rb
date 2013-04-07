@@ -20,9 +20,10 @@ open(url) do |source|
 end
 puts
 console("download 'https://raw.github.com/atmarksharp/jsget/master/jsget'")
-
 FileUtils.move(filename, '/usr/bin/jsget',{:force => true})
 console("installing '/usr/bin/jsget'")
 FileUtils.chmod(0755, '/usr/bin/jsget', {:verbose => true})
+FileUtils.mkdir("#{ENV["HOME"]}/.jsget/")
+console("createing folder '~/.jsget'")
 console("install successed :)")
 puts
