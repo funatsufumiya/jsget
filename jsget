@@ -1,0 +1,220 @@
+#!/usr/bin/ruby
+ 
+require "rexml/document"
+require 'optparse'
+require 'fileutils'
+require 'open-uri'
+ 
+@red = "\e\[00;31m"
+@green = "\e\[00;32m"
+@clear = "\e\[00;0m"
+ 
+def is_zip?(filename)
+  filename.include?(".zip")
+end
+ 
+def trim_ext(filename)
+  filename.gsub(/\.[^.]+$/, "")
+end
+ 
+def unzip_file(zip_filename, target_foldername)
+  system("unzip #{zip_filename} -d #{target_foldername} > /dev/null")
+ 
+  if File.exists? target_foldername
+    FileUtils.rm(zip_filename)
+    console "unzipped to #{target_foldername}"
+  end
+end
+ 
+def download(url, filename=nil)
+  if filename==nil or filename==""
+    m = url.match(/.*\/(.*?)$/)
+    filename = m[1]
+  end
+ 
+  console "download " + url
+  temp = open(url)
+ 
+  open(filename, "w") {|f| temp.each {|line| f.puts(line) }}
+ 
+  temp.close
+end
+ 
+def console(s)
+  puts "#{@green}=====> #{@clear}" + s
+end
+ 
+def usage()
+  console "usage: jsget [search|install|list|update|selfupdate] [(library-name)(@version)] [-d DIR] [-f RENAME]"
+end
+ 
+def update()
+  download "https://raw.github.com/gist/2058121/jsget_repo.xml"
+ 
+  FileUtils.mv("jsget_repo.xml", "#{ENV["HOME"] + "/.jsget/jsget_repo.xml"}")
+  FileUtils.rm_r("jsget_repo.xml", {:force=>true})
+  console "updated :)"
+  puts
+end
+ 
+def selfupdate()
+  console "updating jsget..."
+  system 'sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/gist/2058370/jsget-install.rb)"'
+  update()
+  exit
+end
+ 
+#
+#  parse options
+#
+opt = OptionParser.new
+ 
+@dir = ""
+@as = nil
+ 
+opt.on('-d DIR') {|v|
+  if v =~ /.*?\/$/
+    @dir = v
+  else
+    @dir = v+"/"
+  end
+}
+opt.on('-f FILE') {|v| @as = v }
+ 
+opt.parse!(ARGV)
+ 
+#
+#  load jsget_repo.xml
+#
+doc = nil
+ 
+if !File.exists? "#{ENV["HOME"]}/.jsget/jsget_repo.xml"
+  update()
+end
+ 
+File.open("#{ENV["HOME"]}/.jsget/jsget_repo.xml") {|fp|
+  doc = REXML::Document.new fp
+}
+ 
+repo = doc.elements.each('/repositories/repository'){}
+libs = repo.map{|e| e.elements['name'].text }
+ 
+#
+#  help
+#
+if ARGV[0] == "help" || ARGV[0] == "-h" || ARGV[0] == "--help" || ARGV[0] == nil ############
+  usage()
+  exit
+ 
+elsif ARGV[0] == "update"
+  update()
+ 
+elsif ARGV[0] == "selfupdate"
+  selfupdate()
+ 
+#
+#  search
+#
+elsif ARGV[0] == "search" ############
+ 
+  libs.each{ |e|
+    if e.include? ARGV[1]
+      puts e
+    end
+  }
+ 
+  #
+  #  install
+  #
+elsif ARGV[0] == "install" ############
+ 
+  if ARGV[1]==nil
+    usage()
+    exit
+  end
+ 
+  if ARGV[1].include? "@"
+    m = ARGV[1].match /^(.*?)@(.*?)$/
+    name = m[1]
+    version = m[2]
+  else
+    name = ARGV[1]
+  end
+ 
+  i = libs.index(name)
+  if i==nil
+    puts "not found '#{name}'"
+    exit
+  end
+ 
+  def install(url,path,filename)
+    download "#{url+path}",filename
+ 
+    if @dir!="" and !File.exist? @dir
+      console "mkdir #{@dir}"
+      FileUtils.mkdir @dir
+    end
+ 
+    if path.include? "/"
+      m = path.match(/.*\/(.*?)$/)
+      path = m[1]
+    end
+ 
+    path = filename.nil? ? path : filename
+ 
+    if @as==nil
+      @as = path
+    end
+ 
+    if path!=@dir+@as
+      console "mv #{path} #{@dir+@as}"
+      FileUtils.mv(path, @dir+@as)
+    end
+ 
+    if is_zip?@as
+      unzip_file @dir+@as, @dir+trim_ext(@as)
+    end
+ 
+    exit
+  end
+ 
+  if version==nil
+    url = repo[i].elements["url"].text
+    path = repo[i].elements["versions/version/@path"].value
+    filename = (repo[i].elements["versions/version/@filename"]) ? repo[i].elements["versions/version/@filename"].value : nil
+    install(url,path,filename)
+  else
+    url = repo[i].elements["url"].text
+    versions = repo[i].elements.each("versions/version/"){ |e|
+      if e.attributes["value"] == version
+        path = e.attributes["path"]
+        filename = e.attributes["filename"] ? e.attributes["filename"] : nil
+        install(url,path,filename)
+      end
+    }
+    puts "version '#{version}' of '#{name}' not found"
+    exit
+  end
+ 
+  #
+  #  list
+  #
+elsif ARGV[0] == "list" ############
+ 
+  if ARGV[1]==nil
+    libs.sort{|a,b|
+      a <=> b
+    }.each{|l| puts l}
+  else
+    i = libs.index(ARGV[1])
+    if i!=nil
+      libname = libs[i]
+      repo[i].elements.each("versions/version"){ |e|
+         puts libname + " @ " + e.attributes['value']
+      }
+    end
+  end
+else
+  puts "invalid command " + ARGV[0]
+ 
+end ############ EOF
