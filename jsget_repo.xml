@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <repositories>
   <repository name="jquery" url="http://code.jquery.com/">
     <versions>
