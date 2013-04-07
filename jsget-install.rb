@@ -13,4 +13,4 @@ open(url) do |source|
 end
 
 FileUtils.move(filename, '/usr/bin/jsget',{:force => true})
-FileUtils.chmod(0755, '/usr/gin/jsget')
+FileUtils.chmod(0755, '/usr/bin/jsget', {:verbose => true})
