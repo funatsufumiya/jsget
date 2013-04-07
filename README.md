@@ -7,7 +7,7 @@ easy-installer for JavaScript. (ex. **jsget install jquery**)
 ## install
 copy command below, and paste it into terminal.  
      
-> sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/gist/2058370/jsget-install.rb)"
+> sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/atmarksharp/jsget/master/jsget-install.rb)"
  
 ## usage
 - jsget update
