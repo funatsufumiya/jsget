@@ -97,7 +97,7 @@ File.open("#{ENV["HOME"]}/.jsget/jsget_repo.xml") {|fp|
 }
  
 repo = doc.elements.each('/repositories/repository'){}
-libs = repo.map{|e| e.elements['name'].text }
+libs = repo.map{|e| e.attributes['name'] }
  
 #
 #  help
@@ -179,7 +179,7 @@ elsif ARGV[0] == "install" ############
   end
  
   if version==nil
-    url = repo[i].elements["url"].text
+    url = repo[i].attributes["url"]
     path = repo[i].elements["versions/version/@path"].value
     filename = (repo[i].elements["versions/version/@filename"]) ? repo[i].elements["versions/version/@filename"].value : nil
     install(url,path,filename)
