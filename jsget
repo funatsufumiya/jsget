@@ -49,7 +49,7 @@ def usage()
 end
  
 def update()
-  download "https://raw.github.com/gist/2058121/jsget_repo.xml"
+  download "https://raw.github.com/atmarksharp/jsget/master/jsget_repo.xml"
  
   FileUtils.mv("jsget_repo.xml", "#{ENV["HOME"] + "/.jsget/jsget_repo.xml"}")
   FileUtils.rm_r("jsget_repo.xml", {:force=>true})
@@ -59,7 +59,7 @@ end
  
 def selfupdate()
   console "updating jsget..."
-  system 'sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/gist/2058370/jsget-install.rb)"'
+  system 'sudo /usr/bin/ruby -e "$(/usr/bin/curl -fksSL https://raw.github.com/atmarksharp/jsget/master/jsget_install.rb)"'
   update()
   exit
 end
