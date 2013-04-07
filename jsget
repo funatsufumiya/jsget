@@ -8,6 +8,7 @@ require 'open-uri'
 @red = "\e\[00;31m"
 @green = "\e\[00;32m"
 @clear = "\e\[00;0m"
+@lightgreen = "\e\[01;32m"
  
 def is_zip?(filename)
   filename.include?(".zip")
@@ -32,7 +33,7 @@ def download(url, filename=nil)
     filename = m[1]
   end
  
-  console "download " + url
+  console "#{@lightgreen}[download]#{@clear} " + url
   temp = open(url)
  
   open(filename, "w") {|f| temp.each {|line| f.puts(line) }}
