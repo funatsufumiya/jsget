@@ -188,7 +188,7 @@ elsif ARGV[0] == "install" ############
     filename = (repo[i].elements["versions/version/@filename"]) ? repo[i].elements["versions/version/@filename"].value : nil
     install(url,path,filename)
   else
-    url = repo[i].elements["url"].text
+    url = repo[i].attributes["url"].text
     versions = repo[i].elements.each("versions/version/"){ |e|
       if e.attributes["value"] == version
         path = e.attributes["path"]
