@@ -20,4 +20,4 @@ copy command below, and paste it into terminal.
 - jsget install jquery@1.6.4 -d js -f jquery.js
  
 ## contribute
-if you noticed missing repository, please add it to 'Isssues' :)
+if you noticed missing repository, please add it to 'Isssues' or edit 'jsget_repo.xml' directly :)
